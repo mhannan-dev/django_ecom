@@ -3,7 +3,7 @@
 <html class="no-js" lang="zxx">
     
     {% block head %}
-        {% include './head.html' %}
+        {% include './partials/head.html' %}
     {% endblock head %}
     <body>
     <!--[if lt IE 8]>
@@ -12,20 +12,20 @@
         <!-- Begin Body Wrapper -->
         <div class="body-wrapper">
             <!-- Begin Header Area -->
-                {% include './header.html' %}
+                {% include './partials/header.html' %}
             <!-- Header Area End Here -->
                 {% block content %}
 
                 {% endblock %}
             <!-- Begin Footer Area -->
-                {% include './footer.html' %}
+                {% include './partials/footer.html' %}
             <!-- Begin Quick View | Modal Area -->
 
             <!-- Quick View | Modal Area End Here -->
         </div>
         <!-- Body Wrapper End Here -->
         {% block scripts %}
-            {% include './script.html' %}
+            {% include './partials/script.html' %}
         {% endblock %} 
     </body>
 </html>
