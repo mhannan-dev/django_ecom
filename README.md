@@ -29,3 +29,4 @@ Follow these steps to set up the project on your local machine:
 - python manage.py migrate
 - python manage.py createsuperuser
 - python manage.py runserver
+- python manage.py test
