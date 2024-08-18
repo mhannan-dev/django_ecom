@@ -22,10 +22,10 @@ Follow these steps to set up the project on your local machine:
 
 ## Necessary commands
 
--python -m venv venv
--source venv/bin/activate  # On Unix or macOS
--venv\Scripts\activate     # On Windows
--pip install -r requirements.txt
--python manage.py migrate
--python manage.py createsuperuser
--python manage.py runserver
+- python -m venv venv
+- source venv/bin/activate  # On Unix or macOS
+- venv\Scripts\activate     # On Windows
+- pip install -r requirements.txt
+- python manage.py migrate
+- python manage.py createsuperuser
+- python manage.py runserver
