@@ -11,7 +11,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+    class Meta:
+        verbose_name_plural = "Categories"
+
 class InventoryAdjustment(models.Model):
     product = models.ForeignKey('Product', related_name='inventory_adjustments', on_delete=models.CASCADE)
     quantity = models.IntegerField()  
@@ -52,7 +54,14 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='product_images/')
 
+    def __str__(self):
+        return f'Image for {self.product.name}'
+    
 class Rating(models.Model):
     product = models.ForeignKey(Product, related_name='ratings', on_delete=models.CASCADE)
     value = models.DecimalField(max_digits=3, decimal_places=2)

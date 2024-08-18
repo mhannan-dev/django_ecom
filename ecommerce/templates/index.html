@@ -1,5 +1,7 @@
 {% extends "_base.html" %}
 {% load static %}
+{% load humanize %}
+
 
 {% block content %}
 <section class="container px-4 py-8 mx-auto">
@@ -33,7 +35,7 @@
                 </a>
                 <div class="flex items-baseline mb-2">
                     <!-- Original price with strikethrough -->
-                    <p class="mr-4 text-lg font-medium text-gray-500 dark:text-gray-400">BDT. {{ product.discounted_price|floatformat:2 }}</p>
+                    <p class="mr-4 text-lg font-medium text-gray-500 dark:text-gray-400">BDT. {{ product.discounted_price|floatformat:2|intcomma  }}</p>
                     <!-- Discounted price -->
                     <p class="text-xl font-semibold text-gray-900 dark:text-white"> -{{ product.discount_percentage }}%</p>
                 </div>

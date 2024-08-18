@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'compressor', 
     'homeapp',
+    'django_extensions',
+    'django.contrib.humanize',
     'debug_toolbar'
 ]
 

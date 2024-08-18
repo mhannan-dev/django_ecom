@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 {% load compress %}
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +21,7 @@
         <div class="container px-6 py-3 mx-auto">
             <div class="flex items-center justify-between">
                 <div>
-                    <a class="text-xl font-bold text-gray-800 md:text-2xl hover:text-gray-700" href="#">Brand</a>
+                    <a class="text-xl font-bold text-gray-800 md:text-2xl hover:text-gray-700" href="{% url 'home' %}">Brand</a>
                 </div>
                 <div class="flex items-center">
                     <a class="mx-4 text-gray-800 hover:text-gray-600" href="#">Shop</a>
@@ -32,7 +33,7 @@
     </header>
 
 
-    <!-- <div id="animation-carousel" class="relative w-full" data-carousel="static">
+    <div id="animation-carousel" class="relative w-full" data-carousel="static">
         <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
             <div class="hidden duration-200 ease-linear" data-carousel-item>
                 <img src="https://flowbite.com/docs/images/blog/image-1.jpg"
@@ -81,7 +82,7 @@
                 <span class="sr-only">Next</span>
             </span>
         </button>
-    </div> -->
+    </div>
 
 
     <main class="mb-4">
@@ -126,6 +127,9 @@
             </div>
         </div>
     </footer>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 </body>
 
 </html>

@@ -17,3 +17,7 @@ python manage.py collectstatic
 python manage.py createsuperuser
 
 rm db.sqlite3
+
+
+python manage.py show_urls
+pip freeze > requirements.txt
