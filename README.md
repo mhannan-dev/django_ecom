@@ -6,7 +6,7 @@ This is a Django ecommerce application with inventory using tailwind, flowbite, 
 
 ## Requirements
 
-- Python 3.8 or higher
+- Python 3.9 or higher
 - Django 4.2 or higher
 - [Other dependencies, e.g., Django REST framework, Pillow, etc.]
 
