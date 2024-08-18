@@ -1,0 +1,99 @@
+<!-- templates/product_detail.html -->
+{% extends "_base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<section class="container px-4 py-8 mx-auto">
+    <div class="flex flex-wrap -mx-4">
+        <!-- Product Images -->
+        <div class="w-full px-4 md:w-1/2">
+            <div class="mb-4">
+                <img class="w-full rounded-lg" src="{{ MEDIA_URL }}/{{ product.main_image }}" alt="{{ product.name }}" />
+            </div>
+            <div class="flex -mx-2">
+                {% for image in product.images.all %}
+                <div class="w-1/4 px-2">
+                    <img class="object-cover w-full h-full rounded-lg" src="{{ MEDIA_URL }}/{{ image.url }}" alt="Additional image of {{ product.name }}" />
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="w-full px-4 md:w-1/2">
+            <h2 class="mb-2 text-4xl font-bold text-gray-900 dark:text-white">{{ product.name }}</h2>
+            <div class="flex items-baseline mb-4">
+                <p class="text-2xl font-semibold text-gray-900 dark:text-white">BDT. {{ product.discounted_price|floatformat:2|intcomma }}</p>
+                <p class="ml-4 text-lg font-medium text-gray-500 dark:text-gray-400">BDT. {{ product.original_price|floatformat:2|intcomma }}</p>
+                <p class="ml-4 text-xl font-semibold text-gray-900 dark:text-white"> -{{ product.discount_percentage }}%</p>
+            </div>
+
+            <!-- Rating Section -->
+            <div class="flex items-center mt-4">
+                {% for i in "12345" %}
+                <svg class="w-5 h-5 {% if product.average_rating >= forloop.counter %}text-yellow-500 dark:text-yellow-400{% else %}text-gray-400 dark:text-gray-500{% endif %}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
+                </svg>
+                {% endfor %}
+                <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">({{ product.Rating_count }} Ratings)</span>
+            </div>
+
+            <!-- Product Description -->
+            <p class="mt-6 text-lg text-gray-700 dark:text-gray-300">{{ product.description }}</p>
+
+            <!-- Stock Availability -->
+            {% if product.get_current_inventory_quantity == 0 %}
+            <p class="mt-4 text-lg font-semibold text-red-500 dark:text-red-400">Stock Out</p>
+            {% else %}
+            <p class="mt-4 text-lg font-semibold text-green-500 dark:text-green-400">In Stock</p>
+            {% endif %}
+
+            <!-- Add to Cart Button -->
+            <a href="#"
+                class="inline-block px-4 py-2 mt-4 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
+                Add to cart
+            </a>
+        </div>
+    </div>
+
+    <!-- Ratings Section -->
+    <div class="mt-12">
+        <h3 class="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">Ratings</h3>
+        {% for Rating in product.Ratings.all %}
+        <div class="pb-6 mb-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center mb-2">
+                <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ Rating.user.username }}</h4>
+                <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">{{ Rating.created_at|date:"F j, Y" }}</span>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">{{ Rating.content }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Submit a Rating -->
+    <div class="mt-12">
+        <h3 class="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">Write a Rating</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="rating" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rating</label>
+                <select id="rating" name="rating" class="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700">
+                    <option value="5">5 - Excellent</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="3">3 - Average</option>
+                    <option value="2">2 - Poor</option>
+                    <option value="1">1 - Terrible</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rating</label>
+                <textarea id="content" name="content" rows="4" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700"></textarea>
+            </div>
+            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
+                Submit Rating
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}

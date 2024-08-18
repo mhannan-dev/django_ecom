@@ -1,7 +1,8 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render
-from .models import Product
+from django.shortcuts import render, get_object_or_404
+from .models import Product, Rating
 from django.conf import settings
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -24,3 +25,16 @@ def index(request):
         'MEDIA_URL': settings.MEDIA_URL,
     }
     return render(request, 'index.html', context)
+
+
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    ratings = Rating.objects.filter(product=product)
+    images = product.images.all()
+
+    context = {
+        'product': product,
+        'ratings': ratings,
+        'images': images
+    }
+    return render(request, 'product_detail.html', context)

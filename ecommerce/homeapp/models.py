@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
-from django.db.models import Sum
+from django.conf import settings
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -11,18 +10,19 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name_plural = "Categories"
 
 class InventoryAdjustment(models.Model):
     product = models.ForeignKey('Product', related_name='inventory_adjustments', on_delete=models.CASCADE)
-    quantity = models.IntegerField()  
-    reason = models.CharField(max_length=255, null=True, blank=True) 
+    quantity = models.IntegerField()
+    reason = models.CharField(max_length=255, null=True, blank=True)
     date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'{self.quantity} units for {self.product.name} on {self.date}'
-    
+
 class Product(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, unique=True)
@@ -42,30 +42,35 @@ class Product(models.Model):
     def average_rating(self):
         ratings = self.ratings.all()
         if ratings.exists():
-            return sum(rating.value for rating in ratings) / ratings.count()
+            return sum(rating.rating for rating in ratings) / ratings.count()
         return None
 
-    def review_count(self):
+    def rating_count(self):
         return self.ratings.count()
 
-    def current_inventory_quantity(self):
+    def get_current_inventory_quantity(self):
         adjustments = InventoryAdjustment.objects.filter(product=self)
-        return adjustments.aggregate(total_quantity=Sum('quantity'))['total_quantity'] or 0
+        return sum(adjustment.quantity for adjustment in adjustments)
 
     def __str__(self):
         return self.name
-    
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product_images/')
 
     def __str__(self):
         return f'Image for {self.product.name}'
-    
+
 class Rating(models.Model):
-    product = models.ForeignKey(Product, related_name='ratings', on_delete=models.CASCADE)
-    value = models.DecimalField(max_digits=3, decimal_places=2)
-    comment = models.TextField(null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ratings')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        unique_together = ('product', 'user')
 
     def __str__(self):
-        return f'Rating {self.value} for {self.product.name}'
+        return f'{self.rating} - {self.product.name}'
+

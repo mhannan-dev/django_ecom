@@ -1,13 +1,12 @@
 {% extends "_base.html" %}
 {% load static %}
 {% load humanize %}
-
+{% load custom_filters %} 
 
 {% block content %}
 <section class="container px-4 py-8 mx-auto">
     <div class="flex items-center justify-between py-10">
-        <h2
-            class="text-4xl font-bold underline dark:text-white underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">
+        <h2 class="text-4xl font-bold underline dark:text-white underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">
             Popular products
         </h2>
         <div class="relative">
@@ -23,7 +22,6 @@
         </div>
     </div>
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <!-- Item 1 -->
         {% for product in products %}
         <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#">
@@ -34,44 +32,22 @@
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ product.name }}</h5>
                 </a>
                 <div class="flex items-baseline mb-2">
-                    <!-- Original price with strikethrough -->
-                    <p class="mr-4 text-lg font-medium text-gray-500 dark:text-gray-400">BDT. {{ product.discounted_price|floatformat:2|intcomma  }}</p>
-                    <!-- Discounted price -->
+                    <p class="mr-4 text-lg font-medium text-gray-500 dark:text-gray-400">BDT. {{ product.discounted_price|floatformat:2|intcomma }}</p>
                     <p class="text-xl font-semibold text-gray-900 dark:text-white"> -{{ product.discount_percentage }}%</p>
                 </div>
-                <!-- Review section -->
                 <div class="flex items-center mt-4">
-                    <!-- Star rating -->
-                    <svg class="w-5 h-5 text-yellow-500 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
+                    {% for i in "12345" %}
+                    <svg class="w-5 h-5 {% if product.average_rating >= forloop.counter %}text-yellow-500 dark:text-yellow-400{% else %}text-gray-400 dark:text-gray-500{% endif %}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
                     </svg>
-                    <svg class="w-5 h-5 text-yellow-500 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
-                    </svg>
-                    <svg class="w-5 h-5 text-yellow-500 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
-                    </svg>
-                    <svg class="w-5 h-5 text-yellow-500 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
-                    </svg>
-                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
-                    </svg>
-                    <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">({{ product.review_count }})</span>
+                    {% endfor %}
+                    <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">({{ product.Rating_count }})</span>
                 </div>
-                <!-- Availability -->
+                {% if product.get_current_inventory_quantity == 0 %}
+                <p class="mt-4 text-lg font-semibold text-red-500 dark:text-red-400">Stock Out</p>
+            {% else %}
                 <p class="mt-4 text-lg font-semibold text-green-500 dark:text-green-400">In Stock</p>
-                <!-- Button -->
+            {% endif %}
                 <a href="#"
                     class="inline-block px-4 py-2 mt-4 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
                     Add to cart
@@ -80,7 +56,6 @@
         </div>
         {% endfor %}
     </div>
-    <!-- Pagination controls -->
     <div class="flex justify-center mt-6">
         <div class="flex items-center">
             {% if products.has_previous %}
@@ -93,11 +68,9 @@
                 Previous
             </a>
             {% endif %}
-
             <span class="px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400">
                 Page {{ products.number }} of {{ products.paginator.num_pages }}
             </span>
-
             {% if products.has_next %}
             <a href="?page={{ products.next_page_number }}"
                 class="px-4 py-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 dark:hover:underline">

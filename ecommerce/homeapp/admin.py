@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import Product, Rating, Category, InventoryAdjustment
+from .models import Product, Rating, Category, InventoryAdjustment, ProductImage
+from django.utils.html import format_html
+
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
 
 class RatingInline(admin.TabularInline):
     model = Rating
@@ -7,9 +13,9 @@ class RatingInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'original_price', 'discount_percentage', 'current_inventory_quantity', 'status')
+    list_display = ('name', 'slug', 'original_price', 'display_main_image', 'discount_percentage', 'current_inventory_quantity', 'status')
     prepopulated_fields = {"slug": ("name",)}
-    inlines = [RatingInline]
+    inlines = [RatingInline, ProductImageInline]
     search_fields = ('name', 'description')
     list_filter = ('category',)
 
@@ -17,11 +23,20 @@ class ProductAdmin(admin.ModelAdmin):
         return obj.discounted_price()
     discounted_price.short_description = 'Discounted Price'
 
+    def display_main_image(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="50" height="50" />', obj.image.url)
+        return format_html('<img src="{}" width="50" height="50" />', 'https://via.placeholder.com/50')  
+    display_main_image.short_description = 'Main Image'
+
+    def current_inventory_quantity(self, obj):
+        return obj.get_current_inventory_quantity()
+    current_inventory_quantity.short_description = 'Current Inventory Quantity'
+
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ('product', 'value', 'comment')
-    list_filter = ('product', 'value')
-    search_fields = ('product__name', 'comment')
+    list_display = ('product', 'user', 'rating', 'created_at')
+    list_filter = ('product', 'rating', 'created_at')
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
