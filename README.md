@@ -17,7 +17,7 @@ Follow these steps to set up the project on your local machine:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/your-repository.git
+   git clone https://github.com/mhannan-dev/django_ecom.git
    cd your-repository
 
 python -m venv venv
