@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a Django application designed to [brief description of what your app does]. 
+This is a Django ecommerce application with inventory using tailwind, flowbite, django, sqlite3
 
 ## Requirements
 
