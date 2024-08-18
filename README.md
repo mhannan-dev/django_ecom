@@ -1,4 +1,4 @@
-# Django Application
+# Django ecommerce application with inventory
 
 ## Overview
 
