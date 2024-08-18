@@ -1,5 +1,5 @@
-{% load compress %}
 {% load static %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Django Ecommerce</title>
+    <title>MHCom</title>
 
     {% compress css %}
     <link rel="stylesheet" href="{% static 'src/output.css' %}">
@@ -17,22 +17,115 @@
 
 <body class="bg-green-50">
     <header class="bg-white shadow">
-        <div class="container mx-auto px-6 py-3">
+        <div class="container px-6 py-3 mx-auto">
             <div class="flex items-center justify-between">
                 <div>
-                    <a class="text-gray-800 text-xl font-bold md:text-2xl hover:text-gray-700" href="#">Brand</a>
+                    <a class="text-xl font-bold text-gray-800 md:text-2xl hover:text-gray-700" href="#">Brand</a>
                 </div>
                 <div class="flex items-center">
-                    <a class="text-gray-800 hover:text-gray-600 mx-4" href="#">Shop</a>
-                    <a class="text-gray-800 hover:text-gray-600 mx-4" href="#">Contact</a>
-                    <a class="text-gray-800 hover:text-gray-600 mx-4" href="#">Cart</a>
+                    <a class="mx-4 text-gray-800 hover:text-gray-600" href="#">Shop</a>
+                    <a class="mx-4 text-gray-800 hover:text-gray-600" href="#">Contact</a>
+                    <a class="mx-4 text-gray-800 hover:text-gray-600" href="#">Cart</a>
                 </div>
             </div>
         </div>
     </header>
-    <main>
+
+
+    <!-- <div id="animation-carousel" class="relative w-full" data-carousel="static">
+        <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+            <div class="hidden duration-200 ease-linear" data-carousel-item>
+                <img src="https://flowbite.com/docs/images/blog/image-1.jpg"
+                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Hello">
+            </div>
+            <div class="hidden duration-200 ease-linear" data-carousel-item>
+                <img src="https://flowbite.com/docs/images/blog/image-1.jpg"
+                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Hello">
+            </div>
+            <div class="hidden duration-200 ease-linear" data-carousel-item="active">
+                <img src="	https://flowbite.com/docs/images/carousel/carousel-3.svg"
+                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Hello">
+            </div>
+            <div class="hidden duration-200 ease-linear" data-carousel-item>
+                <img src="	https://flowbite.com/docs/images/carousel/carousel-4.svg"
+                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Hello">
+            </div>
+            <div class="hidden duration-200 ease-linear" data-carousel-item>
+                <img src="	https://flowbite.com/docs/images/carousel/carousel-5.svg"
+                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Hello">
+            </div>
+        </div>
+        <button type="button"
+            class="absolute top-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer start-0 group focus:outline-none"
+            data-carousel-prev>
+            <span
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 1 1 5l4 4" />
+                </svg>
+                <span class="sr-only">Previous</span>
+            </span>
+        </button>
+        <button type="button"
+            class="absolute top-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer end-0 group focus:outline-none"
+            data-carousel-next>
+            <span
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 9 4-4-4-4" />
+                </svg>
+                <span class="sr-only">Next</span>
+            </span>
+        </button>
+    </div> -->
+
+
+    <main class="mb-4">
         {% block content %}
         {% endblock content %}
     </main>
+    <footer class="py-8 text-white bg-gray-800">
+        <div class="max-w-screen-xl px-4 mx-auto">
+            <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+                <div>
+                    <h2 class="mb-4 text-lg font-bold">Company</h2>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="hover:underline">About Us</a></li>
+                        <li class="mb-2"><a href="#" class="hover:underline">Careers</a></li>
+                        <li class="mb-2"><a href="#" class="hover:underline">Press</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="mb-4 text-lg font-bold">Resources</h2>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="hover:underline">Blog</a></li>
+                        <li class="mb-2"><a href="#" class="hover:underline">Docs</a></li>
+                        <li class="mb-2"><a href="#" class="hover:underline">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="mb-4 text-lg font-bold">Support</h2>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="hover:underline">Contact Us</a></li>
+                        <li class="mb-2"><a href="#" class="hover:underline">FAQ</a></li>
+                        <li class="mb-2"><a href="#" class="hover:underline">Help Center</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 mt-8 text-center border-t border-gray-700">
+                <p>&copy; 2024 MHCom. All rights reserved.</p>
+                <div class="mt-4">
+                    <a href="#" class="mx-2 text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="mx-2 text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="mx-2 text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
+
 </html>

@@ -1,13 +1,13 @@
 from django.contrib import admin
-from .models import Product, Rating, Category
+from .models import Product, Rating, Category, InventoryAdjustment
 
 class RatingInline(admin.TabularInline):
     model = Rating
-    extra = 1 
+    extra = 1
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'original_price', 'discount_percentage', 'discounted_price', 'average_rating', 'review_count')
+    list_display = ('name', 'slug', 'original_price', 'discount_percentage', 'current_inventory_quantity', 'status')
     prepopulated_fields = {"slug": ("name",)}
     inlines = [RatingInline]
     search_fields = ('name', 'description')
@@ -20,8 +20,8 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
     list_display = ('product', 'value', 'comment')
-    list_filter = ('product', 'value') 
-    search_fields = ('product__name', 'comment') 
+    list_filter = ('product', 'value')
+    search_fields = ('product__name', 'comment')
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -29,3 +29,10 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('name', 'slug')
     prepopulated_fields = {'slug': ('name',)}
     list_filter = ('status', 'parent')
+
+@admin.register(InventoryAdjustment)
+class InventoryAdjustmentAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity', 'reason', 'date')
+    list_filter = ('date', 'product')
+    search_fields = ('product__name', 'reason')
+    readonly_fields = ('date',)
