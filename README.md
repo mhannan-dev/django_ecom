@@ -1,4 +1,4 @@
-# Django ecommerce application with inventory
+# Django ecommerce application with inventory using tailwind, flowbite, django, sqlite3
 
 ## Overview
 
