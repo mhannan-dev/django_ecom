@@ -19,3 +19,11 @@ Follow these steps to set up the project on your local machine:
    ```bash
    git clone https://github.com/yourusername/your-repository.git
    cd your-repository
+
+python -m venv venv
+source venv/bin/activate  # On Unix or macOS
+venv\Scripts\activate     # On Windows
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
