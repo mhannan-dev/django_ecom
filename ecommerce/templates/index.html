@@ -1,16 +1,17 @@
 {% extends "_base.html" %}
 {% load static %}
 {% load humanize %}
-{% load custom_filters %} 
+{% load custom_filters %}
 
 {% block content %}
 <section class="container px-4 py-8 mx-auto">
     <div class="flex items-center justify-between py-10">
-        <h2 class="text-4xl font-bold underline dark:text-white underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">
+        <h2
+            class="text-4xl font-bold underline dark:text-white underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">
             Popular products
         </h2>
-        <div class="relative">
-            <input type="text"
+        <form class="relative" action="{% url 'home' %}" method="get">
+            <input type="text" name="search"
                 class="py-2 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg w-72 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent dark:bg-gray-800 dark:text-gray-200 dark:focus:ring-blue-500"
                 placeholder="Search products...">
             <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="currentColor" viewBox="0 0 20 20"
@@ -19,8 +20,10 @@
                     d="M8 4a6 6 0 100 12 6 6 0 000-12zm3.707 9.293a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414z"
                     clip-rule="evenodd"></path>
             </svg>
-        </div>
+        </form>
     </div>
+    {% if products %}
+
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {% for product in products %}
         <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -28,26 +31,33 @@
                 <img class="rounded-t-lg" src="{{ MEDIA_URL }}/{{ product.image }}" alt="{{ product.name }}" />
             </a>
             <div class="p-5">
-                <a href="#">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ product.name }}</h5>
+                <a href="{% url 'product_detail' product.slug %}">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ product.name }}
+                    </h5>
                 </a>
                 <div class="flex items-baseline mb-2">
-                    <p class="mr-4 text-lg font-medium text-gray-500 dark:text-gray-400">BDT. {{ product.discounted_price|floatformat:2|intcomma }}</p>
-                    <p class="text-xl font-semibold text-gray-900 dark:text-white"> -{{ product.discount_percentage }}%</p>
+                    <p class="mr-4 text-lg font-medium text-gray-500 dark:text-gray-400">
+                        BDT. {{ product.discounted_price|floatformat:2|intcomma }}</p>
+                    <p class="text-xl font-semibold text-gray-900 dark:text-white"> -{{ product.discount_percentage }}%
+                    </p>
                 </div>
                 <div class="flex items-center mt-4">
                     {% for i in "12345" %}
-                    <svg class="w-5 h-5 {% if product.average_rating >= forloop.counter %}text-yellow-500 dark:text-yellow-400{% else %}text-gray-400 dark:text-gray-500{% endif %}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
+                    <svg class="w-5 h-5 {% if product.average_rating >= forloop.counter %}text-yellow-500 dark:text-yellow-400{% else %}text-gray-400 dark:text-gray-500{% endif %}"
+                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
                     </svg>
                     {% endfor %}
-                    <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">({{ product.Rating_count }})</span>
+                    <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+                        ({{ product.rating_count }})
+                    </span>
                 </div>
                 {% if product.get_current_inventory_quantity == 0 %}
                 <p class="mt-4 text-lg font-semibold text-red-500 dark:text-red-400">Stock Out</p>
-            {% else %}
+                {% else %}
                 <p class="mt-4 text-lg font-semibold text-green-500 dark:text-green-400">In Stock</p>
-            {% endif %}
+                {% endif %}
                 <a href="#"
                     class="inline-block px-4 py-2 mt-4 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
                     Add to cart
@@ -56,6 +66,7 @@
         </div>
         {% endfor %}
     </div>
+
     <div class="flex justify-center mt-6">
         <div class="flex items-center">
             {% if products.has_previous %}
@@ -83,5 +94,12 @@
             {% endif %}
         </div>
     </div>
+    {% else %}
+    <div class="py-10 text-center">
+        <h2 class="text-2xl font-bold text-gray-700 dark:text-gray-300">No products found</h2>
+        <p class="text-gray-500 dark:text-gray-400">Try adjusting your search or filter to find what you're looking for.
+        </p>
+    </div>
+    {% endif %}
 </section>
 {% endblock %}

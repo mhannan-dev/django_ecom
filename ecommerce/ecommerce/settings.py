@@ -57,6 +57,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.current_url',
             ],
         },
     },
@@ -113,8 +114,13 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Compress settings (optional)
+
 COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True  
+COMPRESS_PRECOMPILERS = (
+    ('text/x-sass', 'sass --stdin --no-cache --style compressed'),
+    ('text/x-scss', 'sass --stdin --no-cache --style compressed'),
+)
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -123,3 +129,5 @@ STATICFILES_FINDERS = [
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+

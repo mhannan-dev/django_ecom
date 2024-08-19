@@ -9,7 +9,7 @@
         <!-- Product Images -->
         <div class="w-full px-4 md:w-1/2">
             <div class="mb-4">
-                <img class="w-full rounded-lg" src="{{ MEDIA_URL }}/{{ product.main_image }}" alt="{{ product.name }}" />
+                <img class="w-full rounded-lg" src="{{ MEDIA_URL }}/{{ product.image }}" alt="{{ product.name }}" />
             </div>
             <div class="flex -mx-2">
                 {% for image in product.images.all %}
@@ -60,13 +60,13 @@
     <!-- Ratings Section -->
     <div class="mt-12">
         <h3 class="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">Ratings</h3>
-        {% for Rating in product.Ratings.all %}
+        {% for rating in product.ratings.all %}
         <div class="pb-6 mb-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-2">
-                <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ Rating.user.username }}</h4>
-                <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">{{ Rating.created_at|date:"F j, Y" }}</span>
+                <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ rating.user.username }}</h4>
+                <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">{{ rating.created_at|date:"F j, Y" }}</span>
             </div>
-            <p class="text-gray-700 dark:text-gray-300">{{ Rating.content }}</p>
+            <p class="text-gray-700 dark:text-gray-300">{{ rating.content }}</p>
         </div>
         {% endfor %}
     </div>
