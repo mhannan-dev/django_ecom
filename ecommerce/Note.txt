@@ -8,7 +8,7 @@ python manage.py flush
 
 
 python manage.py migrate
-python manage.py makemigrations homeapp
+python manage.py makemigrations main
 
 
 python manage.py runserver
@@ -21,3 +21,8 @@ rm db.sqlite3
 
 python manage.py show_urls
 pip freeze > requirements.txt
+
+
+
+python manage.py database_seeder
+

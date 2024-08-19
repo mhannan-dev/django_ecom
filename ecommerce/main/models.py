@@ -3,10 +3,10 @@ from django.utils import timezone
 from django.conf import settings
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    slug = models.SlugField(max_length=255, unique=True)
-    status = models.BooleanField(default=True)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, unique=True)
+    status = models.BooleanField(default=True)
+    slug = models.SlugField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
@@ -24,17 +24,17 @@ class InventoryAdjustment(models.Model):
         return f'{self.quantity} units for {self.product.name} on {self.date}'
 
 class Product(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    slug = models.SlugField(max_length=255, unique=True)
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField()
+    name = models.CharField(max_length=255, unique=True)
+    image = models.ImageField(upload_to='product_images/')
+    slug = models.SlugField(max_length=255, unique=True)
     original_price = models.DecimalField(max_digits=10, decimal_places=2)
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
-    image = models.ImageField(upload_to='product_images/')
     status = models.BooleanField(default=True)
     meta_title = models.CharField(max_length=255)
     meta_description = models.TextField(null=True, blank=True)
     meta_tags = models.TextField(null=True, blank=True)
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
 
     def discounted_price(self):
         return self.original_price * (1 - (self.discount_percentage / 100))
