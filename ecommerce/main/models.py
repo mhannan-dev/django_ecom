@@ -35,6 +35,8 @@ class Product(models.Model):
     meta_title = models.CharField(max_length=255)
     meta_description = models.TextField(null=True, blank=True)
     meta_tags = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
 
     def discounted_price(self):
         return self.original_price * (1 - (self.discount_percentage / 100))
@@ -58,6 +60,8 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product_images/')
+    alt_text = models.CharField(max_length=255, blank=True, null=True)
+
 
     def __str__(self):
         return f'Image for {self.product.name}'

@@ -1,4 +1,3 @@
-<!-- templates/product_detail.html -->
 {% extends "_base.html" %}
 {% load static %}
 {% load humanize %}
@@ -8,15 +7,61 @@
     <div class="flex flex-wrap -mx-4">
         <!-- Product Images -->
         <div class="w-full px-4 md:w-1/2">
-            <div class="mb-4">
-                <img class="w-full rounded-lg" src="{{ MEDIA_URL }}/{{ product.image }}" alt="{{ product.name }}" />
-            </div>
-            <div class="flex -mx-2">
-                {% for image in product.images.all %}
-                <div class="w-1/4 px-2">
-                    <img class="object-cover w-full h-full rounded-lg" src="{{ MEDIA_URL }}/{{ image.url }}" alt="Additional image of {{ product.name }}" />
+            <div id="default-carousel" class="relative w-full" data-carousel="slide">
+                <!-- Carousel wrapper -->
+                <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+                    {% if images %}
+                    {% for image in images %}
+                    <div class="{% if forloop.first %}block{% else %}hidden{% endif %} duration-700 ease-in-out"
+                        data-carousel-item>
+                        <img src="{{ MEDIA_URL }}{{ image.image }}"
+                            class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                            alt="{{ image.alt_text }}">
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>No images available for this product.</p>
+                    {% endif %}
                 </div>
-                {% endfor %}
+
+                <!-- Slider indicators -->
+                {% if images %}
+                <div class="absolute z-30 flex space-x-3 -translate-x-1/2 bottom-5 left-1/2 rtl:space-x-reverse">
+                    {% for image in images %}
+                    <button type="button" class="w-3 h-3 rounded-full" aria-current="{{ forloop.first }}"
+                        aria-label="Slide {{ forloop.counter0 }}"
+                        data-carousel-slide-to="{{ forloop.counter0 }}"></button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Slider controls -->
+                <button type="button"
+                    class="absolute top-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer start-0 group focus:outline-none"
+                    data-carousel-prev>
+                    <span
+                        class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                        <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 1 1 5l4 4" />
+                        </svg>
+                        <span class="sr-only">Previous</span>
+                    </span>
+                </button>
+                <button type="button"
+                    class="absolute top-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer end-0 group focus:outline-none"
+                    data-carousel-next>
+                    <span
+                        class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                        <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 9 4-4-4-4" />
+                        </svg>
+                        <span class="sr-only">Next</span>
+                    </span>
+                </button>
             </div>
         </div>
 
@@ -24,24 +69,26 @@
         <div class="w-full px-4 md:w-1/2">
             <h2 class="mb-2 text-4xl font-bold text-gray-900 dark:text-white">{{ product.name }}</h2>
             <div class="flex items-baseline mb-4">
-                <p class="text-2xl font-semibold text-gray-900 dark:text-white">BDT. {{ product.discounted_price|floatformat:2|intcomma }}</p>
-                <p class="ml-4 text-lg font-medium text-gray-500 dark:text-gray-400">BDT. {{ product.original_price|floatformat:2|intcomma }}</p>
-                <p class="ml-4 text-xl font-semibold text-gray-900 dark:text-white"> -{{ product.discount_percentage }}%</p>
+                <p class="text-2xl font-semibold text-gray-900 dark:text-white">BDT.
+                    {{ product.discounted_price|floatformat:2|intcomma }}</p>
+                <p class="ml-4 text-lg font-medium text-gray-500 dark:text-gray-400">BDT.
+                    {{ product.original_price|floatformat:2|intcomma }}</p>
+                <p class="ml-4 text-xl font-semibold text-gray-900 dark:text-white"> -{{ product.discount_percentage }}%
+                </p>
             </div>
 
             <!-- Rating Section -->
             <div class="flex items-center mt-4">
                 {% for i in "12345" %}
-                <svg class="w-5 h-5 {% if product.average_rating >= forloop.counter %}text-yellow-500 dark:text-yellow-400{% else %}text-gray-400 dark:text-gray-500{% endif %}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
+                <svg class="w-5 h-5 {% if product.average_rating >= forloop.counter %}text-yellow-500 dark:text-yellow-400{% else %}text-gray-400 dark:text-gray-500{% endif %}"
+                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
                 </svg>
                 {% endfor %}
-                <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">({{ product.Rating_count }} Ratings)</span>
             </div>
-
             <!-- Product Description -->
             <p class="mt-6 text-lg text-gray-700 dark:text-gray-300">{{ product.description }}</p>
-
             <!-- Stock Availability -->
             {% if product.get_current_inventory_quantity == 0 %}
             <p class="mt-4 text-lg font-semibold text-red-500 dark:text-red-400">Stock Out</p>
@@ -60,7 +107,7 @@
     <!-- Ratings Section -->
     <div class="mt-12">
         <h3 class="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">Ratings</h3>
-        {% for rating in product.ratings.all %}
+        {% for rating in ratings %}
         <div class="pb-6 mb-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-2">
                 <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ rating.user.username }}</h4>
@@ -78,7 +125,8 @@
             {% csrf_token %}
             <div class="mb-4">
                 <label for="rating" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rating</label>
-                <select id="rating" name="rating" class="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700">
+                <select id="rating" name="rating"
+                    class="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700">
                     <option value="5">5 - Excellent</option>
                     <option value="4">4 - Very Good</option>
                     <option value="3">3 - Average</option>
@@ -87,13 +135,67 @@
                 </select>
             </div>
             <div class="mb-4">
-                <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rating</label>
-                <textarea id="content" name="content" rows="4" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700"></textarea>
+                <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Content</label>
+                <textarea id="content" name="content" rows="4"
+                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700"></textarea>
             </div>
-            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
+            <button type="submit"
+                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
                 Submit Rating
             </button>
         </form>
     </div>
+
+    <div class="flex items-center justify-between py-10">
+        <h2
+            class="text-4xl font-bold underline dark:text-white underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">
+            Suggested Products
+        </h2>
+    </div>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {% for suggested_product in suggested_products %}
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <a href="{% url 'product_detail' suggested_product.slug %}">
+                <img class="rounded-t-lg" src="{{ MEDIA_URL }}{{ suggested_product.image }}" alt="{{ suggested_product.name }}" />
+            </a>
+            <div class="p-5">
+                <a href="{% url 'product_detail' suggested_product.slug %}">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        {{ suggested_product.name }}
+                    </h5>
+                </a>
+                <div class="flex items-baseline mb-2">
+                    <p class="mr-4 text-lg font-medium text-gray-500 dark:text-gray-400">
+                        BDT. {{ suggested_product.discounted_price|floatformat:2|intcomma }}</p>
+                    <p class="text-xl font-semibold text-gray-900 dark:text-white"> -{{ suggested_product.discount_percentage }}%
+                    </p>
+                </div>
+                <div class="flex items-center mt-4">
+                    {% for i in "12345" %}
+                    <svg class="w-5 h-5 {% if suggested_product.average_rating >= forloop.counter %}text-yellow-500 dark:text-yellow-400{% else %}text-gray-400 dark:text-gray-500{% endif %}"
+                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z" />
+                    </svg>
+                    {% endfor %}
+                    <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+                        ({{ suggested_product.rating_count }})
+                    </span>
+                </div>
+
+                {% if suggested_product.get_current_inventory_quantity == 0 %}
+                <p class="mt-4 text-lg font-semibold text-red-500 dark:text-red-400">Stock Out</p>
+                {% else %}
+                <p class="mt-4 text-lg font-semibold text-green-500 dark:text-green-400">In Stock</p>
+                {% endif %}
+                <a href="{% url 'product_detail' suggested_product.slug %}"
+                    class="inline-block px-4 py-2 mt-4 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
+                    Add to cart
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
 </section>
 {% endblock %}
