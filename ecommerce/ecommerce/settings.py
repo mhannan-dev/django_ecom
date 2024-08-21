@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django.contrib.humanize',
     'templatetags',
+    'apps.user_auth',
     'debug_toolbar'
 ]
 
@@ -41,6 +42,12 @@ MIDDLEWARE = [
 
 INTERNAL_IPS = [
     '127.0.0.1',
+]
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend', 
+    'apps.user_auth.login.EmailOrUsernameModelBackend',
 ]
 
 
@@ -67,21 +74,18 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 # Database
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'dj_ecommerce',
-    #     'USER': 'root',
-    #     'PASSWORD': '',
-    #     'HOST': 'localhost',
-    #     'PORT': '3306',
-    #     'OPTIONS': {
-    #         'unix_socket': '/path/to/your/mysql.sock',
-    #     },
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dj_ecommerce',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306'
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
 }
 
 # Password validation

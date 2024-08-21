@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, get_object_or_404
 from .models import Product, Rating
 from django.conf import settings
@@ -6,7 +7,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import RegistrationForm
+from .forms import RegistrationForm, CustomAuthenticationForm
 import logging
 logger = logging.getLogger(__name__)
 
@@ -74,19 +75,44 @@ def product_detail(request, slug):
     return render(request, 'product_detail.html', context)
 
 
+
 def account_form(request):
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            first_name = form.cleaned_data['first_name']
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
+        reg_form = RegistrationForm(request.POST)
+        login_form = CustomAuthenticationForm(request, data=request.POST)
+
+        # Handle registration
+        if 'register' in request.POST and reg_form.is_valid():
+            first_name = reg_form.cleaned_data['first_name']
+            username = reg_form.cleaned_data['username']
+            email = reg_form.cleaned_data['email']
+            password = reg_form.cleaned_data['password']
             user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name)
             user.save()
             messages.success(request, "Registration successful. You can now log in.")
-            return redirect(request.path_info)  # Redirect to the same page to avoid resubmission
-    else:
-        form = RegistrationForm()
+            return redirect(request.path_info)
 
-    return render(request, 'account.html', {'form': form})
+        # Handle login
+        elif 'login' in request.POST and login_form.is_valid():
+            username = login_form.cleaned_data.get('username')
+            password = login_form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                # messages.success(request, "Login successful!")
+                return redirect('user_dashboard') 
+            else:
+                messages.error(request, "Invalid username or password")
+
+    else:
+        reg_form = RegistrationForm()
+        login_form = CustomAuthenticationForm()
+
+    context = {
+        'reg_form': reg_form,
+        'login_form': login_form,
+        'login' : "Login",
+        'register': 'Register'
+    }
+
+    return render(request, 'account.html', context)

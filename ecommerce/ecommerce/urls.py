@@ -8,6 +8,7 @@ from .admin import admin_site
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
+    path('user/', include('apps.user_auth.urls')), 
 ]
 
 if settings.DEBUG:

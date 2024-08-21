@@ -1,0 +1,24 @@
+{% extends '_base.html' %}
+{% load static %} {% load humanize %}
+{% load custom_filters %}
+{% block content %}
+  <section class="container px-4 py-8 mx-auto">
+    <div class="flex flex-col py-10 space-y-8 md:flex-row md:space-y-0">
+      <!-- Main Content -->
+      <div class="flex-1 max-w-sm md:mr-8">
+        <h2 class="mb-6 text-4xl font-bold text-left underline dark:text-white underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">Dashboard</h2>
+        {% if user.is_authenticated %}
+          <p>Welcome, {{ user.username }}!</p>
+        {% else %}
+          <p>
+            Please <a href="{% url 'login' %}">log in</a> to access this content.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  <script></script>
+{% endblock %}
