@@ -78,12 +78,14 @@ def account_form(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            username = form.cleaned_data['username']
             email = form.cleaned_data['email']
-            password = form.cleaned_data['password']            
-            user = User.objects.create_user(username=email, email=email, password=password)
+            password = form.cleaned_data['password']
+            user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name)
             user.save()
             messages.success(request, "Registration successful. You can now log in.")
-            return redirect(request.path_info)
+            return redirect(request.path_info)  # Redirect to the same page to avoid resubmission
     else:
         form = RegistrationForm()
 
