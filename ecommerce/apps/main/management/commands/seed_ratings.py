@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from main.models import Product, Rating
+from apps.main.models import Product, Rating
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 import random

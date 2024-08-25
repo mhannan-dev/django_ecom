@@ -2,23 +2,21 @@ from django.db import IntegrityError, DatabaseError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
-from .models import Product, Rating
+from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.db.models import Q
-from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import RegistrationForm, CustomAuthenticationForm
 import logging
-logger = logging.getLogger(__name__)
 
+from apps.main.forms import CustomAuthenticationForm, RegistrationForm
+from apps.main.models import Product, Rating
+
+logger = logging.getLogger(__name__)
 
 def index(request):
     search_query = request.GET.get('search', '')
-
     product_list = get_filtered_products(search_query)
-
     page_number = request.GET.get('page')
     products = paginate_products(product_list, page_number)
 
@@ -39,7 +37,6 @@ def index(request):
         'last_visited_product': last_visited_product 
     }
     return render(request, 'index.html', context)
-
 
 def get_filtered_products(search_query):
     product_list = Product.objects.filter(status=True)
@@ -69,9 +66,7 @@ def get_product_details(slug):
 def get_suggested_products(category_id, exclude_product_id):
     return Product.objects.filter(category_id=category_id).exclude(id=exclude_product_id).order_by('-created_at')[:8]
 
-
 def product_detail(request, slug):
-    """Render the product detail page."""
     product, ratings, images = get_product_details(slug)
     suggested_products = get_suggested_products(product.category_id, product.id)
     
@@ -85,14 +80,11 @@ def product_detail(request, slug):
     
     return render(request, 'product_detail.html', context)
 
-
-    
 def account_form(request):
     if request.method == 'POST':
         reg_form = RegistrationForm(request.POST)
         login_form = CustomAuthenticationForm(request, data=request.POST)
 
-        # Handle registration
         if 'register' in request.POST and reg_form.is_valid():
             first_name = reg_form.cleaned_data['first_name']
             username = reg_form.cleaned_data['username']
@@ -103,7 +95,6 @@ def account_form(request):
             messages.success(request, "Registration successful. You can now log in.")
             return redirect(request.path_info)
 
-        # Handle login
         elif 'login' in request.POST and login_form.is_valid():
             username = login_form.cleaned_data.get('username')
             password = login_form.cleaned_data.get('password')
@@ -114,7 +105,6 @@ def account_form(request):
                 return redirect('user_dashboard') 
             else:
                 messages.error(request, "Invalid username or password")
-
     else:
         reg_form = RegistrationForm()
         login_form = CustomAuthenticationForm()
@@ -122,14 +112,11 @@ def account_form(request):
     context = {
         'reg_form': reg_form,
         'login_form': login_form,
-        'login' : "Login",
+        'login': "Login",
         'register': 'Register'
     }
 
     return render(request, 'account.html', context)
-
-
-
 
 @login_required
 def submit_rating(request, slug):
@@ -137,10 +124,7 @@ def submit_rating(request, slug):
     if request.method == 'POST':
         rating_value = request.POST.get('rating')
         review_text = request.POST.get('review')
-
-        print(f"Rating Value: {rating_value}, Review Text: {review_text}")
         
-        # Check if rating_value is provided and is valid
         if not rating_value or not rating_value.isdigit():
             messages.error(request, 'Rating value is required and must be a number between 1 and 5.')
             return redirect('product_detail', slug=slug)
@@ -167,7 +151,6 @@ def submit_rating(request, slug):
 
             except IntegrityError as e:
                 messages.error(request, 'A database integrity error occurred. Please try again.')
-                logger.info(request.POST.get('rating'))
                 logger.error('Integrity error when saving rating for user: %s, product: %s, Error: %s', request.user.username, product.name, str(e))
                 return redirect('product_detail', slug=slug)
 
@@ -182,5 +165,3 @@ def submit_rating(request, slug):
     
     messages.error(request, 'Invalid request method.')
     return redirect('product_detail', slug=slug)
-
-

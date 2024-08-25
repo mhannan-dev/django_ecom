@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from main.models import Product, InventoryAdjustment
+from apps.main.models import Product, InventoryAdjustment
 from django.utils import timezone
 import random
 

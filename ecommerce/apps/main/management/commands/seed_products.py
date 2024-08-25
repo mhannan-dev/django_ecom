@@ -1,6 +1,6 @@
 import os
 from django.core.management.base import BaseCommand
-from main.models import Category, Product
+from apps.main.models import Category, Product
 from django.utils.text import slugify
 from django.core.files import File
 

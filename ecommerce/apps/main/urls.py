@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import index, product_detail, account_form, submit_rating
+from apps.main.views import account_form, index, submit_rating,product_detail
+
 
 urlpatterns = [
     path('', index, name='home'),

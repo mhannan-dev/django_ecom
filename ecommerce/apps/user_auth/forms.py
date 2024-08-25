@@ -7,7 +7,7 @@ from django.utils.html import format_html
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'username', 'email']
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
@@ -30,7 +30,7 @@ class ProfileForm(forms.ModelForm):
 
         # Set help text class using format_html
         for field in self.fields.values():
-            if field.help_text:  # Only wrap if there is help text
+            if field.help_text:  
                 field.help_text = format_html('<span class="text-red-600">{}</span>', field.help_text)
 
     def clean_email(self):
@@ -58,5 +58,3 @@ class UpdatePasswordForm(PasswordChangeForm):
         for field in self.fields.values():
             if field.help_text:
                 field.help_text = format_html('<span class="text-red-600">{}</span>', field.help_text)
-
-  

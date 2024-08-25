@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Product, Rating, Category, InventoryAdjustment, ProductImage
 from django.utils.html import format_html
+
+from apps.main.models import Category, InventoryAdjustment, Product, ProductImage, Rating
 
 
 class ProductImageInline(admin.TabularInline):

@@ -1,15 +1,15 @@
 from django.contrib import admin
 from django.urls import include, path
-
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('main.urls')),
-    path('user/', include('apps.user_auth.urls')), 
-    path('order/', include('apps.order.urls')), 
+    path('', include('apps.main.urls')),  
+    path('user/', include('apps.user_auth.urls')),  
+    path('order/', include('apps.order.urls')),  
 ]
+
 
 if settings.DEBUG:
     import debug_toolbar

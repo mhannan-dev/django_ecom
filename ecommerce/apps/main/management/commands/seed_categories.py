@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from main.models import Category
+from apps.main.models import Category
 
 class Command(BaseCommand):
     help = 'Seed the main categories'
