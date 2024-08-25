@@ -1,12 +1,10 @@
-# views.py
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
-from .forms import ProfileForm, UpdatePasswordForm
 from django.contrib.auth import update_session_auth_hash
 import logging
-
+from .forms import ProfileForm, UpdatePasswordForm
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +18,8 @@ def user_dashboard(request):
             logger.info('Profile updated successfully for user: %s', request.user.username)
             return redirect(request.path_info)
         else:
-            messages.error(request, 'There was an error updating your profile.', form.errors)
+            messages.error(request, 'There was an error updating your profile.')
+            logger.error('Error updating profile for user: %s. Errors: %s', request.user.username, form.errors)
     else:
         form = ProfileForm(instance=request.user)
 
@@ -36,7 +35,6 @@ def user_logout(request):
     messages.success(request, "Logout successful!")
     return redirect('account_form')
 
-
 @login_required
 def user_password_update(request):
     if request.method == 'POST':
@@ -44,15 +42,18 @@ def user_password_update(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user) 
-            logout(request)
+            messages.success(request, "Password updated successfully!")
+            logger.info('Password updated successfully for user: %s', request.user.username)
             return redirect('account_form')
-
         else:
-            messages.error(request, 'Form errors: %s', form.errors)
+            messages.error(request, 'There was an error updating your password.')
+            logger.error('Error updating password for user: %s. Errors: %s', request.user.username, form.errors)
     else:
         form = UpdatePasswordForm(user=request.user)
+    
     context = {
         'title': "Password update",
         'pwd_update_form': form
     }
     return render(request, 'auth/user_password_update.html', context)
+

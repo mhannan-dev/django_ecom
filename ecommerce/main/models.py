@@ -69,12 +69,20 @@ class ProductImage(models.Model):
 class Rating(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ratings')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])
-    created_at = models.DateTimeField(default=timezone.now)
+    rating = models.PositiveIntegerField(blank=True, null=True)
+    review = models.TextField(blank=True, null=True)
+    status = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('product', 'user')
+        ordering = ['-created_at']
 
     def __str__(self):
         return f'{self.rating} - {self.product.name}'
 
+    def save(self, *args, **kwargs):
+        """Override save to update updated at timestamp"""
+        self.updated_at = timezone.now()
+        super().save(*args, **kwargs)

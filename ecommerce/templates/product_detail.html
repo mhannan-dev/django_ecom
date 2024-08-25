@@ -121,12 +121,12 @@
     <!-- Submit a Rating -->
     <div class="mt-12">
         <h3 class="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">Write a Rating</h3>
-        <form method="post">
+        <form method="post" action="{% url 'submit_rating' product.slug %}">
             {% csrf_token %}
             <div class="mb-4">
                 <label for="rating" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rating</label>
-                <select id="rating" name="rating"
-                    class="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700">
+                <select id="rating" 
+                    class="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700" name="rating">
                     <option value="5">5 - Excellent</option>
                     <option value="4">4 - Very Good</option>
                     <option value="3">3 - Average</option>
@@ -135,8 +135,8 @@
                 </select>
             </div>
             <div class="mb-4">
-                <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Content</label>
-                <textarea id="content" name="content" rows="4"
+                <label for="review" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Review</label>
+                <textarea id="review" name="review" rows="4"
                     class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700"></textarea>
             </div>
             <button type="submit"
@@ -145,7 +145,7 @@
             </button>
         </form>
     </div>
-
+    
     <div class="flex items-center justify-between py-10">
         <h2
             class="text-4xl font-bold underline dark:text-white underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">
