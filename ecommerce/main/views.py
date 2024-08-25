@@ -12,6 +12,33 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def index(request):
+    search_query = request.GET.get('search', '')
+
+    product_list = get_filtered_products(search_query)
+
+    page_number = request.GET.get('page')
+    products = paginate_products(product_list, page_number)
+
+    last_visited_product = None
+    if 'last_visited_product_id' in request.session:
+        last_visited_product_id = request.session['last_visited_product_id']
+        try:
+            last_visited_product = Product.objects.get(id=last_visited_product_id)
+        except Product.DoesNotExist:
+            logger.warning(f"Product with ID {last_visited_product_id} not found.")
+            del request.session['last_visited_product_id']
+
+    context = {
+        'products': products,
+        'page_name': "home_page",
+        'MEDIA_URL': settings.MEDIA_URL,
+        'search_query': search_query,
+        'last_visited_product': last_visited_product 
+    }
+    return render(request, 'index.html', context)
+
+
 def get_filtered_products(search_query):
     product_list = Product.objects.filter(status=True)
     if search_query:
@@ -30,24 +57,6 @@ def paginate_products(product_list, page_number, items_per_page=8):
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
     return products
-
-def index(request):
-    search_query = request.GET.get('search', '')
-
-    product_list = get_filtered_products(search_query)
-
-    page_number = request.GET.get('page')
-    products = paginate_products(product_list, page_number)
-
-    context = {
-        'products': products,
-        'page_name': "home_page",
-        'MEDIA_URL': settings.MEDIA_URL,
-        'search_query': search_query,
-    }
-    return render(request, 'index.html', context)
-
-
 
 def get_product_details(slug):
     product = get_object_or_404(Product, slug=slug)
@@ -89,7 +98,7 @@ def account_form(request):
             password = reg_form.cleaned_data['password']
             user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name)
             user.save()
-            messages.success(request, "Registration successful. You can now log in.")
+            # messages.success(request, "Registration successful. You can now log in.")
             return redirect(request.path_info)
 
         # Handle login
@@ -99,7 +108,7 @@ def account_form(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                # messages.success(request, "Login successful!")
+                messages.success(request, "Login successful!")
                 return redirect('user_dashboard') 
             else:
                 messages.error(request, "Invalid username or password")

@@ -1,0 +1,50 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+
+{% block content %}
+<section class="container px-4 py-8 mx-auto">
+    <div class="flex flex-col space-y-8 md:flex-row md:space-y-0">
+        <!-- Header Section -->
+        <div class="flex-1 max-w-sm md:mr-8">
+            <h2 class="mb-6 text-4xl font-bold text-left underline dark:text-white underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">
+                {{ title }}
+            </h2>
+        </div>
+       
+    </div>
+     <div class="w-full md:flex-1">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Product Name</th>
+                        <th scope="col" class="px-6 py-3">Image</th>
+                        <th scope="col" class="px-6 py-3">Price</th>
+                        <th scope="col" class="px-6 py-3">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td class="px-6 py-4">{{ product.name }}</td>
+                        <td class="px-6 py-4">
+                            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="object-cover w-16 h-16 rounded">
+                        </td>
+                        <td class="px-6 py-4">${{ product.price }}</td>
+                        <td class="px-6 py-4">{{ product.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    
+</script>
+{% endblock %}
