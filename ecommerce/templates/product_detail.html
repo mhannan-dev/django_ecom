@@ -110,13 +110,22 @@
         {% for rating in ratings %}
         <div class="pb-6 mb-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-2">
-                <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ rating.user.username }}</h4>
+                <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ rating.user.first_name }} {{ rating.user.last_name }}</h4>
                 <span class="ml-4 text-sm text-gray-500 dark:text-gray-400">{{ rating.created_at|date:"F j, Y" }}</span>
+                <div class="flex items-center ml-4">
+                    {% for i in "12345" %}
+                    <svg class="w-5 h-5 {% if rating.rating >= forloop.counter %}text-yellow-500 dark:text-yellow-400{% else %}text-gray-400 dark:text-gray-500{% endif %}"
+                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 15.27L16.18 18 14.54 11.97 20 8.27 13.81 8 10 2 6.19 8 0 8.27 5.46 11.97 3.82 18 10 15.27z"></path>
+                    </svg>
+                    {% endfor %}
+                </div>
             </div>
-            <p class="text-gray-700 dark:text-gray-300">{{ rating.content }}</p>
+            <p class="text-gray-700 dark:text-gray-300">{{ rating.review }}</p>
         </div>
         {% endfor %}
     </div>
+
 
     <!-- Submit a Rating -->
     <div class="mt-12">

@@ -120,48 +120,39 @@ def account_form(request):
 
 @login_required
 def submit_rating(request, slug):
+    if request.method != 'POST':
+        messages.error(request, 'Invalid request method.')
+        return redirect('product_detail', slug=slug)
+
     product = get_object_or_404(Product, slug=slug)
-    if request.method == 'POST':
-        rating_value = request.POST.get('rating')
-        review_text = request.POST.get('review')
-        
-        if not rating_value or not rating_value.isdigit():
-            messages.error(request, 'Rating value is required and must be a number between 1 and 5.')
-            return redirect('product_detail', slug=slug)
+    rating_value = request.POST.get('rating')
+    review_text = request.POST.get('review')
 
-        try:
-            rating_value = int(rating_value)
-            if rating_value < 1 or rating_value > 5:
-                messages.error(request, 'Invalid rating value. Please choose a value between 1 and 5.')
-                return redirect('product_detail', slug=slug)
+    if not rating_value or not rating_value.isdigit():
+        messages.error(request, 'Rating value is required and must be a number between 1 and 5.')
+        return redirect('product_detail', slug=slug)
 
-            try:
-                rating, created = Rating.objects.get_or_create(user=request.user, product=product)
-                rating.rating = rating_value
-                rating.review = review_text
-                rating.save()
+    try:
+        rating_value = int(rating_value)
+        if rating_value < 1 or rating_value > 5:
+            raise ValueError('Invalid rating value')
 
-                if created:
-                    logger.info('Rating created for user: %s, product: %s', request.user.username, product.name)
-                else:
-                    logger.info('Rating updated for user: %s, product: %s', request.user.username, product.name)
+        rating, created = Rating.objects.get_or_create(user=request.user, product=product, defaults={'rating': rating_value, 'review': review_text})
+        if not created:
+            rating.rating = rating_value
+            rating.review = review_text
+            rating.save(update_fields=['rating', 'review'])
 
-                messages.success(request, 'Your rating has been submitted successfully!')
-                return redirect('product_detail', slug=slug)
+        action = 'created' if created else 'updated'
+        logger.info('Rating %s for user: %s, product: %s', action, request.user.username, product.name)
+        messages.success(request, 'Your rating has been submitted successfully!')
+    except (ValueError, TypeError):
+        messages.error(request, 'Invalid rating value. Please choose a value between 1 and 5.')
+    except IntegrityError as e:
+        messages.error(request, 'A database integrity error occurred. Please try again.')
+        logger.error('Integrity error when saving rating for user: %s, product: %s, Error: %s', request.user.username, product.name, str(e))
+    except DatabaseError as e:
+        messages.error(request, 'A database error occurred. Please try again later.')
+        logger.error('Database error when saving rating for user: %s, product: %s, Error: %s', request.user.username, product.name, str(e))
 
-            except IntegrityError as e:
-                messages.error(request, 'A database integrity error occurred. Please try again.')
-                logger.error('Integrity error when saving rating for user: %s, product: %s, Error: %s', request.user.username, product.name, str(e))
-                return redirect('product_detail', slug=slug)
-
-            except DatabaseError as e:
-                messages.error(request, 'A database error occurred. Please try again later.')
-                logger.error('Database error when saving rating for user: %s, product: %s, Error: %s', request.user.username, product.name, str(e))
-                return redirect('product_detail', slug=slug)
-
-        except (TypeError, ValueError):
-            messages.error(request, 'Invalid rating value. Please choose a value between 1 and 5.')
-            return redirect('product_detail', slug=slug)
-    
-    messages.error(request, 'Invalid request method.')
     return redirect('product_detail', slug=slug)
