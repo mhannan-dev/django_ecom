@@ -88,3 +88,21 @@ class Rating(models.Model):
         """Override save to update updated at timestamp"""
         self.updated_at = timezone.now()
         super().save(*args, **kwargs)
+
+
+class Slider(models.Model):
+    title = models.CharField(max_length=255, help_text="Title of the slider image")
+    subtitle = models.CharField(max_length=255, blank=True, null=True, help_text="Subtitle of the slider image")
+    image = models.ImageField(upload_to='slider_images/', help_text="Upload the slider image")
+    link_url = models.URLField(max_length=255, blank=True, null=True, help_text="URL to redirect when the slider is clicked")
+    alt_text = models.CharField(max_length=255, help_text="Alternative text for the image")
+    order = models.PositiveIntegerField(blank=True, null=True, help_text="Order of the slider image")  # Changed line
+    status = models.BooleanField(default=True, help_text="Toggle to activate/deactivate the slider")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title

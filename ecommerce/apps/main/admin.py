@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from apps.main.models import Category, InventoryAdjustment, Product, ProductImage, Rating
+from apps.main.models import Category, InventoryAdjustment, Product, ProductImage, Rating, Slider
 
 
 class ProductImageInline(admin.TabularInline):
@@ -52,3 +52,13 @@ class InventoryAdjustmentAdmin(admin.ModelAdmin):
     list_filter = ('date', 'product')
     search_fields = ('product__name', 'reason')
     readonly_fields = ('date',)
+
+
+@admin.register(Slider)
+class SliderAdmin(admin.ModelAdmin):
+    list_display = ('title', 'order', 'status', 'created_at', 'updated_at')
+    list_editable = ('order', 'status')
+    search_fields = ('title', 'subtitle')
+    list_filter = ('status', 'created_at')
+    ordering = ('order',)
+    fields = ('title', 'subtitle', 'image', 'link_url', 'alt_text', 'order', 'status')
