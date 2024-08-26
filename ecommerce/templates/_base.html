@@ -33,7 +33,6 @@
     <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
       <div class="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto">
         <a href="{% url 'home' %}" class="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
           <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">QCommerce</span>
         </a>
         <button data-collapse-toggle="navbar-multi-level" type="button" class="inline-flex items-center justify-center w-10 h-10 p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-multi-level" aria-expanded="false">
@@ -107,22 +106,23 @@
                 Password Update 
               </a>
             </li>
-            
-            <li>
-              <a href="{% url 'orders' %}" class="block px-3 py-2 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                My Orders 
-              </a>
-            </li>
             {% else %}
             <li>
               <a href="{% url 'account_form' %}" class="block px-3 py-2 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Account</a>
             </li>
             {% endif %}
+            <li>
+              <a href="{% url 'cart' %}" class="block px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="inline w-8 h-8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.364 2.636a2.25 2.25 0 002.182 1.864h8.908a2.25 2.25 0 002.182-1.864L19 3H5.364m-2.364 0L3 21h18M5 3h14l1.5 18H4.5L5 3zM10 13.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm5 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/>
+                </svg>
+                <span class="ml-2">Carts</span>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
-
     {% if page_name == 'home_page' %}
       <section class="container py-1 mx-auto">
         <div id="animation-carousel" class="relative w-full" data-carousel="static">
@@ -191,25 +191,14 @@
               <li>
                 <a href="#" class="hover:underline">Blog</a>
               </li>
-              <li>
-                <a href="#" class="hover:underline">Docs</a>
-              </li>
-              <li>
-                <a href="#" class="hover:underline">API</a>
-              </li>
+             
             </ul>
           </div>
           <div>
             <h2 class="mb-4 text-lg font-bold">Support</h2>
             <ul class="space-y-2">
               <li>
-                <a href="#" class="hover:underline">Contact Us</a>
-              </li>
-              <li>
                 <a href="#" class="hover:underline">FAQ</a>
-              </li>
-              <li>
-                <a href="#" class="hover:underline">Help Center</a>
               </li>
             </ul>
           </div>

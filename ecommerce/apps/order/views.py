@@ -6,7 +6,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-@login_required
 def orders(request):
     context = {
         'title': "Orders",

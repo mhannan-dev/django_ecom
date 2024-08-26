@@ -81,9 +81,10 @@
                 {% else %}
                 <p class="mt-4 text-lg font-semibold text-green-500 dark:text-green-400">In Stock</p>
                 {% endif %}
-                <a href="#"
-                    class="inline-block px-4 py-2 mt-4 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
-                    Add to cart
+                
+                <a href="{% url 'add_to_cart' product.id %}"
+                    class="inline-block px-4 py-2 mt-4 text-sm font-medium text-center text-white bg-blue-600 rounded-lg add-to-cart hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
+                    Add to bag
                 </a>
             </div>
         </div>
@@ -125,4 +126,29 @@
     </div>
     {% endif %}
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('.add-to-cart').click(function(event) {
+        event.preventDefault(); 
+
+        var url = $(this).attr('href');
+        
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(response) {
+                toastr.success(response.message, 'Success');
+                $('#cart-item-count').text(response.cart_item_count);
+            },
+            error: function(xhr) {
+                toastr.error('Something went wrong. Please try again.', 'Error');
+            }
+        });
+    });
+});
+</script>
+
 {% endblock %}

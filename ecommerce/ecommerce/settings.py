@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'templatetags',
     'apps.main',
+    'apps.shopping',
     'apps.user_auth',
     'apps.order',
     'debug_toolbar'

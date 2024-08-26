@@ -38,7 +38,9 @@ class Product(models.Model):
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
 
+    @property
     def discounted_price(self):
+        """Calculate and return the discounted price."""
         return self.original_price * (1 - (self.discount_percentage / 100))
 
     def average_rating(self):

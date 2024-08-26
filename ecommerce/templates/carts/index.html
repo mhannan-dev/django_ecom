@@ -1,0 +1,96 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<section class="container px-4 py-8 mx-auto">
+    <h2 class="text-4xl font-bold dark:text-white">Your Shopping Items</h2>
+    {% if cart_items %}
+    <form class="mt-6" action="{% url 'checkout' %}" method="post">
+        {% csrf_token %}
+        <ul>
+            {% for item in cart_items %}
+            <li class="flex items-center justify-between py-4">
+                <div class="flex items-center">
+                    <img src="{{ MEDIA_URL }}/{{ item.product.image }}" alt="{{ item.product.name }}" class="w-16 h-16 rounded-lg" width="100">
+                    <div class="ml-4">
+                        <h3 class="text-xl font-bold">{{ item.product.name }}</h3>
+                        <p class="text-gray-500">Price BDT. {{ item.product.discounted_price|floatformat:2|intcomma }}</p>
+                        <div class="flex items-center">
+                            Quantity
+                            <button type="button" class="text-gray-500 hover:text-gray-700" data-item-id="{{ item.id }}" data-change="-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6" />
+                                </svg>
+                            </button>
+                            <span class="mx-2" id="quantity-{{ item.id }}">{{ item.quantity }}</span>
+                            <button type="button" class="text-gray-500 hover:text-gray-700" data-item-id="{{ item.id }}" data-change="1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a href="{% url 'remove_cart' item.id %}" class="text-red-500 hover:underline">Remove</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="flex items-center justify-between mt-4">
+            <h3 class="text-2xl font-bold dark:text-white">Total: BDT. {{ total_price|floatformat:2|intcomma }}</h3>
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Checkout</button>
+        </div>
+    </form>
+    {% else %}
+    <p class="text-gray-500 dark:text-gray-400">Your cart is empty.</p>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('button[data-change]').on('click', function(event) {
+            event.preventDefault();
+
+            var itemId = $(this).data('item-id');
+            var change = $(this).data('change');
+            var quantityElement = $('#quantity-' + itemId);
+            var currentQuantity = parseInt(quantityElement.text(), 10);
+            var newQuantity = currentQuantity + change;
+
+            // Logging for debugging
+            console.log('Item ID:', itemId);
+
+            // Prevent the quantity from going below 1
+            if (newQuantity < 1) {
+                console.warn('Quantity cannot be less than 1.');
+                return;
+            }
+            // AJAX call to update quantity
+            $.ajax({
+                url: '/shopping/update-cart/' + itemId + '/',
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: JSON.stringify({ quantityChange: change }),
+                success: function(response) {
+                    if (response.success) {
+                        quantityElement.text(newQuantity);
+                    } else {
+                        console.error('Failed to update quantity:', response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
